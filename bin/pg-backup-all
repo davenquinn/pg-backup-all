@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+role='postgres'
+databases="SELECT datname FROM pg_database WHERE NOT datistemplate"
+
+psql -AtU $role -c $databases \
+| while read f; do
+  # Dump schema with pg_dump
+  pg_dump -U$role --format=c --file=$f.sqlc $f;
+done;
+
